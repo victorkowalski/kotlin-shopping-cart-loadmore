@@ -30,12 +30,12 @@ class ItemsLinearAdapter(/*private var itemsCells: ArrayList<String?>*/) :
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-/*
-    fun addData(dataViews: ArrayList<String?>) {
+
+    fun addData(dataViews: ArrayList<Product?>) {
         //this.itemsCells.addAll(dataViews)
         this.items.addAll(dataViews)
         notifyDataSetChanged()
-    }*/
+    }
 
     fun getItemAtPosition(position: Int): /*String?*/Product? {
         //return itemsCells[position]
@@ -91,9 +91,10 @@ class ItemsLinearAdapter(/*private var itemsCells: ArrayList<String?>*/) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val textView: TextView = holder.itemView.findViewById(R.id.textView)
+
         if (holder.itemViewType == Constant.VIEW_TYPE_ITEM) {
             //holder.itemView.itemtextview.text = itemsCells[position]
+            val textView: TextView = holder.itemView.findViewById(R.id.textView)
             textView?.text = items[position]?.title
         }
 

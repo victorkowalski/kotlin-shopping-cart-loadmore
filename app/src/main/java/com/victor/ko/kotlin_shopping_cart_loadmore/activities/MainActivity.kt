@@ -2,6 +2,7 @@ package com.victor.ko.kotlin_shopping_cart_loadmore.activities
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +20,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bnd: ActivitySearchBinding
 
-    lateinit var itemsCells: ArrayList<String?>
-    lateinit var loadMoreItemsCells: ArrayList<String?>
+    var allItems: ArrayList<Product?> = arrayListOf<Product?>()
+    lateinit var itemsCells: ArrayList<Product?>
+    lateinit var loadMoreItemsCells: ArrayList<Product?>
     lateinit var adapterLinear: ItemsLinearAdapter
     lateinit var scrollListener: RecyclerViewLoadMoreScroll
     lateinit var mLayoutManager: RecyclerView.LayoutManager
@@ -53,7 +55,15 @@ class MainActivity : AppCompatActivity() {
                 val response = ApiAdapter.apiClient.getProducts()
                 if (response.isSuccessful) {
                     val responseData: ResponseData? = response.body()
-                    adapterLinear.items = responseData?.data ?: arrayListOf<Product?>()
+                    //emulate more data
+                    for (i in 0..20) {
+                        allItems.addAll(responseData?.data!!)
+                    }
+                    /*allItems = responseData?.data!!*/
+                    for (i in 0..10) {
+                        adapterLinear.items.add(allItems[i])
+                    }
+                    //adapterLinear.items = responseData?.data ?: arrayListOf<Product?>()
                     adapterLinear.notifyDataSetChanged()
                 } else {
                     Toast.makeText(this@MainActivity, "Error loading data", Toast.LENGTH_SHORT)
@@ -85,40 +95,57 @@ class MainActivity : AppCompatActivity() {
         scrollListener.setOnLoadMoreListener(object :
             OnLoadMoreListener {
             override fun onLoadMore() {
-                LoadMoreData()
+                loadMoreData()
             }
         })
         bnd.myRecycleView.addOnScrollListener(scrollListener)
     }
 
-    private fun LoadMoreData() {
+    private fun loadMoreData() {
         //Add the Loading View
         adapterLinear.addLoadingView()
         //Create the loadMoreItemsCells Arraylist
-        loadMoreItemsCells = ArrayList()
+        loadMoreItemsCells = arrayListOf<Product?>()//ArrayList()
         //Get the number of the current Items of the main Arraylist
         val start = adapterLinear.itemCount
         //Load 16 more items
-        val end = start + 16
+        //val end = start + 16
+        val end = start + 10
         //Use Handler if the items are loading too fast.
         //If you remove it, the data will load so fast that you can't even see the LoadingView
-        Handler().postDelayed({
+        /*Handler().postDelayed({
             for (i in start..end) {
                 //Get data and add them to loadMoreItemsCells ArrayList
-                loadMoreItemsCells.add("Item $i")
+                loadMoreItemsCells.add(allItems[i])
             }
             //Remove the Loading View
             adapterLinear.removeLoadingView()
             //We adding the data to our main ArrayList
-            //adapterLinear.addData(loadMoreItemsCells) // todo:
+            adapterLinear.addData(loadMoreItemsCells) // todo:
             //Change the boolean isLoading to false
             scrollListener.setLoaded()
             //Update the recyclerView in the main thread
             bnd.myRecycleView.post {
                 adapterLinear.notifyDataSetChanged()
             }
-        }, 3000)
+        }, 3000)*/
+        Handler(Looper.getMainLooper()).postDelayed({
+            // Your Code
 
+        for (i in start..end) {
+            //Get data and add them to loadMoreItemsCells ArrayList
+            loadMoreItemsCells.add(allItems[i])
+        }
+        adapterLinear.removeLoadingView()
+        //We adding the data to our main ArrayList
+        adapterLinear.addData(loadMoreItemsCells) // todo:
+        //Change the boolean isLoading to false
+        scrollListener.setLoaded()
+
+            bnd.myRecycleView.post {
+                adapterLinear.notifyDataSetChanged()
+            }
+        }, 2000)
     }
 
 }
