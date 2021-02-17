@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.victor.ko.kotlin_shopping_cart_loadmore.adapters.ItemsLinearAdapter
 import com.victor.ko.kotlin_shopping_cart_loadmore.databinding.ActivitySearchBinding
+import com.victor.ko.kotlin_shopping_cart_loadmore.models.Product
 import com.victor.ko.kotlin_shopping_cart_loadmore.models.ResponseData
 import com.victor.ko.scart.network.ApiAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -30,9 +31,9 @@ class MainActivity : AppCompatActivity() {
         bnd = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(bnd.root)
 
-        setItemsData()
-
         setAdapter()
+
+        setItemsData()
 
         setLayoutManager()
 
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 val response = ApiAdapter.apiClient.getProducts()
                 if (response.isSuccessful) {
                     val responseData: ResponseData? = response.body()
-                    adapterLinear.items = responseData?.data ?: listOf()
+                    adapterLinear.items = responseData?.data ?: arrayListOf<Product?>()
                     adapterLinear.notifyDataSetChanged()
                 } else {
                     Toast.makeText(this@MainActivity, "Error loading data", Toast.LENGTH_SHORT)
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
-        adapterLinear = ItemsLinearAdapter(itemsCells)
+        adapterLinear = ItemsLinearAdapter(/*itemsCells*/)
         adapterLinear.notifyDataSetChanged()
         bnd.myRecycleView.adapter = adapterLinear
     }
@@ -109,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             //Remove the Loading View
             adapterLinear.removeLoadingView()
             //We adding the data to our main ArrayList
-            adapterLinear.addData(loadMoreItemsCells)
+            //adapterLinear.addData(loadMoreItemsCells) // todo:
             //Change the boolean isLoading to false
             scrollListener.setLoaded()
             //Update the recyclerView in the main thread

@@ -18,39 +18,45 @@ import com.victor.ko.kotlin_shopping_cart_loadmore.R
 import com.victor.ko.kotlin_shopping_cart_loadmore.models.Product
 
 
-class ItemsLinearAdapter(private var itemsCells: ArrayList<String?>) :
+class ItemsLinearAdapter(/*private var itemsCells: ArrayList<String?>*/) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var itemsCells: ArrayList<String?> = arrayListOf<String?>()
 
     lateinit var mcontext: Context
 
-    var items: List<Product> = emptyList()
+    var items: ArrayList<Product?> = arrayListOf<Product?>()
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
+/*
     fun addData(dataViews: ArrayList<String?>) {
-        this.itemsCells.addAll(dataViews)
+        //this.itemsCells.addAll(dataViews)
+        this.items.addAll(dataViews)
         notifyDataSetChanged()
-    }
+    }*/
 
-    fun getItemAtPosition(position: Int): String? {
-        return itemsCells[position]
+    fun getItemAtPosition(position: Int): /*String?*/Product? {
+        //return itemsCells[position]
+        return items[position]
     }
 
     fun addLoadingView() {
         //add loading item
         Handler().post {
-            itemsCells.add(null)
-            notifyItemInserted(itemsCells.size - 1)
+            //itemsCells.add(null)
+            items.add(null)
+            //notifyItemInserted(itemsCells.size - 1)
+            notifyItemInserted(items.size - 1)
         }
     }
 
     fun removeLoadingView() {
         //Remove loading item
-        if (itemsCells.size != 0) {
-            itemsCells.removeAt(itemsCells.size - 1)
-            notifyItemRemoved(itemsCells.size)
+        if (items.size != 0) {
+            items.removeAt(items.size - 1)
+            notifyItemRemoved(items.size)
         }
     }
 
@@ -73,11 +79,11 @@ class ItemsLinearAdapter(private var itemsCells: ArrayList<String?>) :
     }
 
     override fun getItemCount(): Int {
-        return itemsCells.size
+        return items.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (itemsCells[position] == null) {
+        return if (items[position] == null) {
             Constant.VIEW_TYPE_LOADING
         } else {
             Constant.VIEW_TYPE_ITEM
@@ -88,7 +94,7 @@ class ItemsLinearAdapter(private var itemsCells: ArrayList<String?>) :
         val textView: TextView = holder.itemView.findViewById(R.id.textView)
         if (holder.itemViewType == Constant.VIEW_TYPE_ITEM) {
             //holder.itemView.itemtextview.text = itemsCells[position]
-            textView.text = itemsCells[position]
+            textView?.text = items[position]?.title
         }
 
     }

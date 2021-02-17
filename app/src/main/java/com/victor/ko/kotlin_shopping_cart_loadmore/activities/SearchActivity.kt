@@ -36,9 +36,9 @@ class SearchActivity : AppCompatActivity() {
         val layoutManager = AutoFitGridLayoutManager(this, 500)
         recyclerView.layoutManager = layoutManager
 
-        loadProducts()
+        //loadProducts()
     }
-
+/*
     private fun loadProducts() {
         //GlobalScope.launch(Dispatchers.Main)
         CoroutineScope(Dispatchers.Main).launch() {
@@ -59,7 +59,7 @@ class SearchActivity : AppCompatActivity() {
 
         }
     }
-
+*/
     private fun adapterOnClick(item: Product) {
         Toast.makeText(this, /*item.text.toString() +*/ " is clicked", Toast.LENGTH_SHORT)
             .show()
